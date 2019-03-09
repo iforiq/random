@@ -86,10 +86,12 @@ class ParCrawler(object):
 
 from concurrent.futures import ThreadPoolExecutor
 def multi_crawl(pc = ParCrawler(maxThreads=4)):
-    executor = ThreadPoolExecutor(max_workers = 2)
-    fut1 = executor.submit(pc.crawl, 'https://www.openai.com')
+    with ThreadPoolExecutor(max_workers = 2) as e:
+        fut1 = e.submit(pc.crawl, 'https://www.openai.com')
+        fut2 = e.submit(pc.crawl, 'https://news.ycombinator.com/')
 
-    fut2 = executor.submit(pc.crawl, 'https://news.ycombinator.com/')
+        print(fut1.result())
+        print(fut2.result())
 
-    print(fut1.result())
-    print(fut2.result())
+if __name__ == "__main__":
+    multi_crawl()
