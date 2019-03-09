@@ -1,4 +1,6 @@
 ## BFS and producer / consumer based multithreaded crawler
+## Handles multiple producers and multiple consumers, with total # of consumers capped.
+
 
 import threading
 from collections import deque
