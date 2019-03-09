@@ -71,7 +71,7 @@ class ParCrawler(object):
                     break
                 u = q.popleft()
                 ret.append(u)
-            # Cap max pages scraped, for sanity
+            # Cap max pages scraped per producer thread, for sanity
             if len(ret) > 30:
                 break
             with self.object_lock:
