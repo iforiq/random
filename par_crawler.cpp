@@ -1,4 +1,4 @@
-// Compile: g++ -std=c++0x par_crawler.cpp -lcurl
+// Compile: g++ -std=c++0x par_crawler.cpp
 // BFS and producer / consumer based multithreaded crawler
 
 #include <stdio.h>
