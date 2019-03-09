@@ -50,7 +50,7 @@ class ParCrawler(object):
                     q.append(u)
             self.numAliveThreads -= 1
             self.cv_full.notify_all()
-            if self.numAliveThreads == 0 or len(q) == 0:
+            if self.numAliveThreads == 0 or len(q) != 0:
                 self.cv_empty.notify_all()
         #print("Ending thread: %s" % url)
 
