@@ -40,6 +40,8 @@ class ParCrawler(object):
             url_list = []
 
         with self.object_lock:
+            ## Make: 'q' grow and  'numAliveThreads' shrink
+            ## Notify producers
             for u in url_list:
                 if not u in visited:
                     visited.add(u)
@@ -58,6 +60,8 @@ class ParCrawler(object):
         ret = []
         while True:
             with self.object_lock:
+                ## Wait for: 'q' to grow or 'numAliveThreads' to shrink to zero
+                ## Make : 'q' shrink
                 self.cv_empty.wait_for(
                     lambda: len(q) != 0 or self.numAliveThreads == 0
                 )
@@ -65,9 +69,12 @@ class ParCrawler(object):
                     break
                 u = q.popleft()
                 ret.append(u)
+            # Cap max pages scraped, for sanity
             if len(ret) > 30:
                 break
             with self.object_lock:
+                ## Wait for : 'numAliveThreads' to shrink below full
+                ## Make : 'numAliveThreads' grow and launch consumer
                 self.cv_full.wait_for(lambda: self.numAliveThreads < self.maxThreads)
                 self.numAliveThreads += 1
                 threading.Thread(
