@@ -31,7 +31,7 @@ class MemoryManager {
   Block merge(const Block left, const Block right) {
     this->rem(left);
     this->rem(right);
-    const Block b = {left.off,left.sz + right.sz, true}; // TODO:
+    const Block b = {left.off,left.sz + right.sz, true};
     this->add(b);
     return b;
   }
@@ -54,7 +54,7 @@ public:
     this->add({0,n,true});
   }
   int malloc(const int req_sz) {
-    auto it = free_sz_off.lower_bound({req_sz,n+1});
+    auto it = free_sz_off.lower_bound({req_sz,-1});
     if (it == free_sz_off.end()) return -1;
     else {
       const auto [sz, off] = *it;
@@ -88,10 +88,14 @@ int main(){
   }
   for (int i = 0; i < 50; i++) {
     m.free(many[i]);
+    assert(m.free(many[i]) == -1);
   }
 
-  int a = m.malloc(200);
-  int b = m.malloc(500);
-  printf("a=%d, b=%d\n", a, b);
+  const int a = m.malloc(200);
+  const int b = m.malloc(500);
+  assert(m.malloc(500) == -1);
+  assert(m.malloc(301) == -1);
+  const int c = m.malloc(300);
+  printf("a=%d, b=%d c=%d\n", a, b, c);
   return 0;
 }
